@@ -1,0 +1,15 @@
+{
+    "compilerOptions": {
+        "target": "es5",
+        "sourceMap": true,
+        "lib": [
+            "es5",
+            "ES2015",
+            "dom"
+        ],
+        "outFile": "connectfour.js",
+        "noImplicitAny": true,
+        "noUnusedLocals": true,
+        "preserveConstEnums": true,
+    }
+}
