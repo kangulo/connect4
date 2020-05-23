@@ -6,8 +6,15 @@ const ctx = canvas.getContext('2d');
 const num_of_rows = 6;
 const num_of_cols = 7;
 
+// Set aprox measure for every cell in the dashboard
+const cellWidth = 100;
+const circle = cellWidth / 2;
+
 // Matrix
 const matrix: number[][] = [];
+
+// Player turns
+let counterTurns = 0;
 
 // Draw Matrix
 function drawMatrix(rows: number, cols: number): void {
@@ -21,23 +28,31 @@ function drawMatrix(rows: number, cols: number): void {
 }
 
 // Draw Circle in Position
-function drawCircle(x: number, y: number): void {
-    ctx.fillStyle = "red";
+function drawCircle(x: number, y: number, player: number): void {
+    ctx.fillStyle = (player) ? "blue" : "red";
     ctx.beginPath();
-    ctx.arc(50 + (y * 100), 50 + (x * 100), 50, 0, 2 * Math.PI);
-    //ctx.arc(x, y, 50, 0, 2 * Math.PI);
+    ctx.arc(circle + (y * cellWidth), circle + (x * cellWidth), circle, 0, 2 * Math.PI);
     ctx.fill();
 }
 
 //Drop ball until the end of the column
 function dropBall(column: number): void {
-    let col = Math.floor(column / 100);
+    // Get index of the column
+    let col = Math.floor(column / cellWidth);
+    let turn: number = 0;
     // Start checking column from bottom to top
     for (let x = matrix.length - 1; x >= 0; x--) {
-        console.log("matrix[x][col] " + x + " " + col + " ");
         if (matrix[x][col] === 0) {
-            matrix[x][col] = 1;
-            drawCircle(x, col);
+            turn = counterTurns % 2;
+            if (turn == 0) {
+                matrix[x][col] = 1;
+                drawCircle(x, col, turn);
+            }
+            else {
+                matrix[x][col] = 2;
+                drawCircle(x, col, turn);
+            }
+            counterTurns++;
             break;
         }
     }

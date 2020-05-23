@@ -4,8 +4,13 @@ var ctx = canvas.getContext('2d');
 // Matrix Dimensions
 var num_of_rows = 6;
 var num_of_cols = 7;
+// Set aprox measure for every cell in the dashboard
+var cellWidth = 100;
+var circle = cellWidth / 2;
 // Matrix
 var matrix = [];
+// Player turns
+var counterTurns = 0;
 // Draw Matrix
 function drawMatrix(rows, cols) {
     for (var x = 0; x < rows; x++) {
@@ -17,22 +22,30 @@ function drawMatrix(rows, cols) {
     //console.table(matrix);
 }
 // Draw Circle in Position
-function drawCircle(x, y) {
-    ctx.fillStyle = "red";
+function drawCircle(x, y, player) {
+    ctx.fillStyle = (player) ? "blue" : "red";
     ctx.beginPath();
-    ctx.arc(50 + (y * 100), 50 + (x * 100), 50, 0, 2 * Math.PI);
-    //ctx.arc(x, y, 50, 0, 2 * Math.PI);
+    ctx.arc(circle + (y * cellWidth), circle + (x * cellWidth), circle, 0, 2 * Math.PI);
     ctx.fill();
 }
 //Drop ball until the end of the column
 function dropBall(column) {
-    var col = Math.floor(column / 100);
+    // Get index of the column
+    var col = Math.floor(column / cellWidth);
+    var turn = 0;
     // Start checking column from bottom to top
     for (var x = matrix.length - 1; x >= 0; x--) {
-        console.log("matrix[x][col] " + x + " " + col + " ");
         if (matrix[x][col] === 0) {
-            matrix[x][col] = 1;
-            drawCircle(x, col);
+            turn = counterTurns % 2;
+            if (turn == 0) {
+                matrix[x][col] = 1;
+                drawCircle(x, col, turn);
+            }
+            else {
+                matrix[x][col] = 2;
+                drawCircle(x, col, turn);
+            }
+            counterTurns++;
             break;
         }
     }
