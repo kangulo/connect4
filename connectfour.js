@@ -48,11 +48,13 @@ function dropBall(column) {
     // Get index of the column
     var col = Math.floor(column / cellWidth);
     var turn = 0;
+    var player;
     // Start checking column from bottom to top
     for (var x = matrix.length - 1; x >= 0; x--) {
         if (matrix[x][col] === 0) {
             turn = counter_turns % 2;
-            matrix[x][col] = (turn == 0 ? 1 : 2);
+            player = (turn == 0 ? 1 : 2);
+            matrix[x][col] = player;
             if (turn) {
                 playerBlueMoves.push("[" + (x + 1) + "," + (col + 1) + "]");
                 // Change font size to indicate turn
@@ -66,10 +68,32 @@ function dropBall(column) {
                 logBlue.style.fontSize = "1.5em";
             }
             drawCircle(x, col, turn);
+            checkColumn(x, col, player);
             counter_turns++;
             break;
         }
     }
+}
+// Move between rows checking the same column
+function checkColumn(row, col, player) {
+    // Wait to have minimun quantity of moves before start checking
+    if (counter_turns < 6)
+        return;
+    var counter = 1;
+    //check below
+    for (var i = row; i < matrix.length - 1; i++) {
+        if (matrix[i + 1][col] == player) {
+            counter++;
+        }
+        else {
+            break;
+        }
+        if (counter > 3) {
+            alert("Congratulations you win");
+            return true;
+        }
+    }
+    return false;
 }
 // Update logs of plays
 function updateLog(player) {
