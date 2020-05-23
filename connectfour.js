@@ -15,6 +15,7 @@ var circle = cellWidth / 2;
 var matrix = [];
 // Variables
 var counter_turns = 0;
+var gameover = false;
 // Logs
 var playerRedMoves = [];
 var playerBlueMoves = [];
@@ -75,17 +76,15 @@ function dropBall(column) {
     }
 }
 function isWinner(x, y, player) {
-    if (checkVerically(x, y, player) || checkHorizontally(x, y, player)) {
+    if (checkVertically(x, y, player) || checkHorizontally(x, y, player) || checkDiagonally(x, y, player)) {
         alert("Congratulations You Win");
         buttonStart.style['visibility'] = 'visible';
         // Comment line below if you want keep playing after win (Debug Purposes Only)
         // gameover = true;
-        return true;
     }
-    return false;
 }
 // Move between rows checking the same column
-function checkVerically(row, col, player) {
+function checkVertically(row, col, player) {
     // Wait to have minimun quantity of moves before start checking
     if (counter_turns < 6)
         return;
@@ -99,7 +98,6 @@ function checkVerically(row, col, player) {
             break;
         }
         if (counter > 3) {
-            alert("Congratulations you win");
             return true;
         }
     }
@@ -171,6 +169,160 @@ function checkHorizontally(row, col, player) {
     }
     return false;
 }
+// Move between Diagonals 
+function checkDiagonally(row, col, player) {
+    var self = 1;
+    //bottom rules
+    if (row == matrix.length - 1 && col == 0) {
+        // search up right only
+        // console.log("search up right only");
+        if (searchRightUp(row, col, player) + self > 3) {
+            return true;
+        }
+    }
+    else if (row == matrix.length - 1 && col > 0 && col < matrix[0].length - 1) {
+        // search up only in both directions left and right
+        // console.log("search up only in both directions left and right");
+        if (searchLeftUp(row, col, player) + self > 3) {
+            return true;
+        }
+        if (searchRightUp(row, col, player) + self > 3) {
+            return true;
+        }
+    }
+    else if (row == matrix.length - 1 && col == matrix[0].length - 1) {
+        // Search Only up left side
+        // console.log("Search Only up left side");
+        if (searchLeftUp(row, col, player) + self > 3) {
+            return true;
+        }
+    }
+    //middle rules
+    else if (row < matrix.length - 1 && row > 0 && col == 0) {
+        // search up right and down right
+        // console.log("search up right and down right");
+        if (searchRightUp(row, col, player) + self > 3) {
+            return true;
+        }
+        if (searchRightDown(row, col, player) + self > 3) {
+            return true;
+        }
+    }
+    else if (row < matrix.length - 1 && row > 0 && col > 0 && col < matrix[0].length - 1) {
+        // search all directions
+        // console.log("search all directions");
+        if (searchRightUp(row, col, player) + searchLeftDown(row, col, player) + self > 3) {
+            return true;
+        }
+        if (searchLeftUp(row, col, player) + searchRightDown(row, col, player) + self > 3) {
+            return true;
+        }
+    }
+    else if (row < matrix.length - 1 && row > 0 && col == matrix[0].length - 1) {
+        // search up left and down left
+        // console.log("search up left and down left");
+        if (searchLeftDown(row, col, player) + self > 3) {
+            return true;
+        }
+        if (searchLeftUp(row, col, player) + self > 3) {
+            return true;
+        }
+    }
+    // up rules
+    else if (row == 0 && col == 0) {
+        // search down right only
+        // console.log("search down right only");
+        if (searchRightDown(row, col, player) + self > 3) {
+            return true;
+        }
+    }
+    else if (row == 0 && col > 0 && col < matrix[0].length - 1) {
+        // search down only in both directions left and right
+        // console.log("search only down in both directions left and right");
+        if (searchLeftDown(row, col, player) + self > 3) {
+            return true;
+        }
+        if (searchRightDown(row, col, player) + self > 3) {
+            return true;
+        }
+    }
+    else if (row == 0 && col == matrix[0].length - 1) {
+        // Search Only down left side
+        // console.log("Search Only down left side");
+        if (searchLeftDown(row, col, player) + self > 3) {
+            return true;
+        }
+    }
+    return false;
+}
+// Walk through Right Up direction looking for matches 
+function searchRightUp(row, col, player) {
+    var counter = 0;
+    var i = row;
+    var j = col;
+    while (i > 0 && j < matrix[0].length - 1) {
+        i--;
+        j++;
+        if (matrix[i][j] == player) {
+            counter++;
+        }
+        else {
+            return counter;
+        }
+    }
+    return counter;
+}
+// Walk through Right Down direction looking for matches 
+function searchRightDown(row, col, player) {
+    var counter = 0;
+    var i = row;
+    var j = col;
+    while (i < matrix.length - 1 && j < matrix[0].length - 1) {
+        i++;
+        j++;
+        if (matrix[i][j] == player) {
+            counter++;
+        }
+        else {
+            return counter;
+        }
+    }
+    return counter;
+}
+// Walk through left Up direction looking for matches 
+function searchLeftUp(row, col, player) {
+    var counter = 0;
+    var i = row;
+    var j = col;
+    while (i > 0 && j > 0) {
+        i--;
+        j--;
+        if (matrix[i][j] == player) {
+            counter++;
+        }
+        else {
+            return counter;
+        }
+    }
+    return counter;
+}
+// Walk through left down direction looking for matches 
+function searchLeftDown(row, col, player) {
+    var counter = 0;
+    var i = row;
+    var j = col;
+    while (i < matrix.length - 1 && j > 0) {
+        i++;
+        j--;
+        if (matrix[i][j] == player) {
+            counter++;
+        }
+        else {
+            return counter;
+        }
+    }
+    return counter;
+}
 // Update logs of plays
 function updateLog(turn) {
     if (turn) {
@@ -190,15 +342,20 @@ function getMousePosition(canvas, event) {
 }
 // Add click event
 canvas.addEventListener('click', function (event) {
+    if (gameover)
+        return;
     var x = getMousePosition(canvas, event).x;
     dropBall(x);
 });
 // Init function
 function Init() {
     // Clear variables
+    gameover = false;
     counter_turns = 0;
     playerBlueMoves = [];
     playerRedMoves = [];
+    // Hide star over button
+    buttonStart.style['visibility'] = 'hidden';
     // clear moves log
     document.querySelector(".redMoves").innerHTML = "";
     document.querySelector(".blueMoves").innerHTML = "";
