@@ -2,6 +2,11 @@
 const canvas = <HTMLCanvasElement>document.getElementById("connectfour");
 const ctx = canvas.getContext('2d');
 
+// Controls
+const logRed = document.getElementById("redMoves");
+const logBlue = document.getElementById("blueMoves");
+const buttonStart = document.getElementById('reset');
+
 // Matrix Dimensions
 const num_of_rows = 6;
 const num_of_cols = 7;
@@ -13,14 +18,12 @@ const circle = cellWidth / 2;
 // Matrix
 const matrix: number[][] = [];
 
-// Player turns
+// Variables
 let counter_turns = 0;
 
 // Logs
 let playerRedMoves: string[] = [];
 let playerBlueMoves: string[] = [];
-const logRed = document.getElementById("redMoves");
-const logBlue = document.getElementById("blueMoves");
 
 // Set Matrix
 function setMatrix(rows: number, cols: number): void {
@@ -40,11 +43,13 @@ function drawCircle(x: number, y: number, player: number): void {
     ctx.fillStyle = 'white';
     ctx.arc(circle + (y * cellWidth), circle + (x * cellWidth), circle, 0, 2 * Math.PI);
     ctx.fill();
-
+    // Circle Player Color
     ctx.beginPath();
     ctx.fillStyle = (player) ? "blue" : "red";
     ctx.arc(circle + (y * cellWidth), circle + (x * cellWidth), circle - 10, 0, 2 * Math.PI);
     ctx.fill();
+    // Render log player
+    updateLog(player);
 }
 
 //Drop ball until the end of the column
@@ -56,17 +61,20 @@ function dropBall(column: number): void {
     for (let x = matrix.length - 1; x >= 0; x--) {
         if (matrix[x][col] === 0) {
             turn = counter_turns % 2;
-            if (turn == 0) {
-                matrix[x][col] = 1;
-                playerRedMoves.push(`[${x + 1},${col + 1}]`);
-                drawCircle(x, col, turn);
+            matrix[x][col] = (turn == 0 ? 1 : 2);
+            if (turn) {
+                playerBlueMoves.push(`[${x + 1},${col + 1}]`);
+                // Change font size to indicate turn
+                logRed.style.fontSize = "1.5em";
+                logBlue.style.fontSize = "1em";
             }
             else {
-                matrix[x][col] = 2;
-                playerBlueMoves.push(`[${x + 1},${col + 1}]`);
-                drawCircle(x, col, turn);
+                playerRedMoves.push(`[${x + 1},${col + 1}]`);
+                // Change font size to indicate turn
+                logRed.style.fontSize = "1em";
+                logBlue.style.fontSize = "1.5em";
             }
-            updateLog(turn);
+            drawCircle(x, col, turn);
             counter_turns++;
             break;
         }
@@ -98,5 +106,22 @@ canvas.addEventListener('click', (event: any) => {
     dropBall(x);
 });
 
-//
-setMatrix(num_of_rows, num_of_cols);
+// Init function
+function Init() {
+    // Clear variables
+    counter_turns = 0;
+    playerBlueMoves = [];
+    playerRedMoves = [];
+    // clear moves log
+    document.querySelector(".redMoves").innerHTML = "";
+    document.querySelector(".blueMoves").innerHTML = "";
+    //Set Font Style
+    logRed.style.fontSize = "1.5em";
+    logBlue.style.fontSize = "1em";
+    // Clear canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    // Set Up Matrix
+    setMatrix(num_of_rows, num_of_cols);
+}
+
+Init();

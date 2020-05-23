@@ -52,6 +52,23 @@
             font-size: 1.5em;
             font-weight: 600;
         }
+
+        #reset {
+            outline: none;
+            padding: 1em 2em;
+            font-size: 1em;
+            font-weight: 800;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+            border-radius: 500px;
+            margin: 10px auto;
+            display: block;
+            /*visibility: hidden;*/
+        }
+
+        #reset:hover {
+            color: white;
+            background-color: red;
+        }
     </style>
 </head>
 
@@ -62,6 +79,7 @@
         <div id="redMoves" class="redMoves"></div>
         <div id="blueMoves" class="blueMoves"></div>
     </div>
+    <button id="reset" onclick="Init()">Start Over!</button>
     <script src="connectfour.js"></script>
 </body>
 
