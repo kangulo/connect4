@@ -1,6 +1,10 @@
 // Get Canvas
 const canvas = <HTMLCanvasElement>document.getElementById("connectfour");
 const ctx = canvas.getContext('2d');
+// Get the modal
+const modal = document.getElementById("myModal");
+const msg = document.getElementById("message");
+const span = document.getElementById("close");
 
 // Controls
 const logRed = document.getElementById("redMoves");
@@ -85,12 +89,18 @@ function dropBall(column: number) {
     }
 }
 
+// Function to check after every move if the user won
 function isWinner(x: number, y: number, player: number) {
     if (checkVertically(x, y, player) || checkHorizontally(x, y, player) || checkDiagonally(x, y, player)) {
-        alert("Congratulations You Win");
+        //alert("Congratulations You Win");
+        let player_name = (player == 1) ? "Red Player" : "Blue Player";
+        let color = (player == 1) ? "red" : "blue";
+        msg.style.color = color;
+        msg.innerHTML = "Congratulations!!!<br><br> " + player_name + " You Win!!!";
+        modal.style.display = "block";
         buttonStart.style['visibility'] = 'visible';
         // Comment line below if you want keep playing after win (Debug Purposes Only)
-        // gameover = true;
+        gameover = true;
     }
 }
 
@@ -366,6 +376,18 @@ canvas.addEventListener('click', (event: any) => {
     dropBall(x);
 });
 
+// When the user clicks on <span> (x), close the modal
+span.onclick = function () {
+    modal.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function (event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}
+
 // Init function
 function Init() {
     // Clear variables
@@ -388,3 +410,6 @@ function Init() {
 }
 
 Init();
+
+
+
