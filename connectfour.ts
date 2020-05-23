@@ -32,14 +32,25 @@ function drawCircle(x: number, y: number): void {
 
 }
 
+//Drop ball until the end of the column
+function dropBall(col: number): void {
+
+    drawCircle(col, num_of_rows * 100 - 50);
+}
+
 // Get Mouse Coordinates
-function getMousePosition(event: any) {
-    drawCircle(event.clientX, event.clientY);
+function getMousePosition(canvas: HTMLCanvasElement, event: any) {
+    var rect = canvas.getBoundingClientRect();
+    return {
+        x: event.clientX - rect.left,
+        y: event.clientY - rect.top
+    }
 }
 
 // Add click event
 canvas.addEventListener('click', (event: any) => {
-    getMousePosition(event);
+    let { x } = getMousePosition(canvas, event);
+    dropBall(x);
 });
 
 //

@@ -26,13 +26,22 @@ function drawCircle(x, y) {
     console.log("entro x", x);
     console.log("entro y", y);
 }
+//Drop ball until the end of the column
+function dropBall(col) {
+    drawCircle(col, num_of_rows * 100 - 50);
+}
 // Get Mouse Coordinates
-function getMousePosition(event) {
-    drawCircle(event.clientX, event.clientY);
+function getMousePosition(canvas, event) {
+    var rect = canvas.getBoundingClientRect();
+    return {
+        x: event.clientX - rect.left,
+        y: event.clientY - rect.top
+    };
 }
 // Add click event
 canvas.addEventListener('click', function (event) {
-    getMousePosition(event);
+    var x = getMousePosition(canvas, event).x;
+    dropBall(x);
 });
 //
 drawMatrix(num_of_rows, num_of_cols);
