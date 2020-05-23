@@ -15,6 +15,10 @@ const buttonStart = document.getElementById('reset');
 const num_of_rows = 6;
 const num_of_cols = 7;
 
+// correct dashboard measures variations 
+const offset_x = 25;
+const offset_y = 18;
+
 // Set aprox measure for every cell in the dashboard
 const cellWidth = 100;
 const circle = cellWidth / 2;
@@ -46,12 +50,12 @@ function drawCircle(x: number, y: number, turn: number) {
     // White Border
     ctx.beginPath();
     ctx.fillStyle = 'white';
-    ctx.arc(circle + (y * cellWidth), circle + (x * cellWidth), circle, 0, 2 * Math.PI);
+    ctx.arc(circle + (y * cellWidth) + offset_x, circle + (x * cellWidth) + offset_y, circle - 10, 0, 2 * Math.PI);
     ctx.fill();
     // Circle Player Color
     ctx.beginPath();
     ctx.fillStyle = (turn) ? "blue" : "red";
-    ctx.arc(circle + (y * cellWidth), circle + (x * cellWidth), circle - 10, 0, 2 * Math.PI);
+    ctx.arc(circle + (y * cellWidth) + offset_x, circle + (x * cellWidth) + offset_y, circle - 15, 0, 2 * Math.PI);
     ctx.fill();
     // Render log player
     updateLog(turn);
@@ -364,8 +368,8 @@ function updateLog(turn: number): void {
 function getMousePosition(canvas: HTMLCanvasElement, event: any) {
     var rect = canvas.getBoundingClientRect();
     return {
-        x: event.clientX - rect.left,
-        y: event.clientY - rect.top
+        x: event.clientX - rect.left - offset_x,
+        y: event.clientY - rect.top - offset_y
     }
 }
 
