@@ -37,7 +37,7 @@ function setMatrix(rows: number, cols: number): void {
 }
 
 // Draw Circle in Position
-function drawCircle(x: number, y: number, player: number) {
+function drawCircle(x: number, y: number, turn: number) {
     // White Border
     ctx.beginPath();
     ctx.fillStyle = 'white';
@@ -45,11 +45,11 @@ function drawCircle(x: number, y: number, player: number) {
     ctx.fill();
     // Circle Player Color
     ctx.beginPath();
-    ctx.fillStyle = (player) ? "blue" : "red";
+    ctx.fillStyle = (turn) ? "blue" : "red";
     ctx.arc(circle + (y * cellWidth), circle + (x * cellWidth), circle - 10, 0, 2 * Math.PI);
     ctx.fill();
     // Render log player
-    updateLog(player);
+    updateLog(turn);
 }
 
 //Drop ball until the end of the column
@@ -77,15 +77,26 @@ function dropBall(column: number) {
                 logBlue.style.fontSize = "1.5em";
             }
             drawCircle(x, col, turn);
-            checkColumn(x, col, player);
+            isWinner(x, col, player);
             counter_turns++;
             break;
         }
     }
 }
 
+function isWinner(x: number, y: number, player: number): boolean {
+    if (checkVerically(x, y, player) || checkHorizontally(x, y, player)) {
+        alert("Congratulations You Win");
+        buttonStart.style['visibility'] = 'visible';
+        // Comment line below if you want keep playing after win (Debug Purposes Only)
+        // gameover = true;
+        return true;
+    }
+    return false;
+}
+
 // Move between rows checking the same column
-function checkColumn(row: number, col: number, player: number): boolean {
+function checkVerically(row: number, col: number, player: number): boolean {
     // Wait to have minimun quantity of moves before start checking
     if (counter_turns < 6) return;
     let counter = 1;
@@ -105,9 +116,77 @@ function checkColumn(row: number, col: number, player: number): boolean {
     return false;
 }
 
+// Move between columns checking the same row
+function checkHorizontally(row: number, col: number, player: number): boolean {
+    // Wait to have minimun quantity of moves before start checking
+    if (counter_turns < 6) return;
+    let counter = 1;
+    // Edge case if is the last column 
+    if (col == matrix[0].length - 1) {
+        for (let i = matrix[0].length - 1; i >= 0; i--) {
+            if (matrix[row][i - 1] == player) {
+                counter++;
+            }
+            else {
+                return false;
+            }
+            if (counter > 3) {
+                return true;
+            }
+        }
+
+    }
+    // Edge case if is the first column
+    else if (col == 0) {
+        for (let i = 0; i <= matrix[0].length - 1; i++) {
+            if (matrix[row][i + 1] == player) {
+                counter++;
+            }
+            else {
+                return false;
+            }
+            if (counter > 3) {
+                return true;
+            }
+        }
+    }
+    else { // middle
+        //check to the right columns
+        let i = col;
+        while (i <= matrix[0].length - 1) {
+            i++;
+            if (matrix[row][i] == player) {
+                counter++;
+            }
+            else {
+                break;
+            }
+            if (counter > 3) {
+                return true;
+            }
+        }
+
+        // Check to the left columns
+        let j = col;
+        while (j >= 0) {
+            j--;
+            if (matrix[row][j] == player) {
+                counter++;
+            }
+            else {
+                break;
+            }
+            if (counter > 3) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
 // Update logs of plays
-function updateLog(player: number): void {
-    if (player) {
+function updateLog(turn: number): void {
+    if (turn) {
         document.querySelector(".blueMoves").innerHTML = playerBlueMoves.toString();
     }
     else {

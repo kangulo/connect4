@@ -29,7 +29,7 @@ function setMatrix(rows, cols) {
     //console.table(matrix);
 }
 // Draw Circle in Position
-function drawCircle(x, y, player) {
+function drawCircle(x, y, turn) {
     // White Border
     ctx.beginPath();
     ctx.fillStyle = 'white';
@@ -37,11 +37,11 @@ function drawCircle(x, y, player) {
     ctx.fill();
     // Circle Player Color
     ctx.beginPath();
-    ctx.fillStyle = (player) ? "blue" : "red";
+    ctx.fillStyle = (turn) ? "blue" : "red";
     ctx.arc(circle + (y * cellWidth), circle + (x * cellWidth), circle - 10, 0, 2 * Math.PI);
     ctx.fill();
     // Render log player
-    updateLog(player);
+    updateLog(turn);
 }
 //Drop ball until the end of the column
 function dropBall(column) {
@@ -68,14 +68,24 @@ function dropBall(column) {
                 logBlue.style.fontSize = "1.5em";
             }
             drawCircle(x, col, turn);
-            checkColumn(x, col, player);
+            isWinner(x, col, player);
             counter_turns++;
             break;
         }
     }
 }
+function isWinner(x, y, player) {
+    if (checkVerically(x, y, player) || checkHorizontally(x, y, player)) {
+        alert("Congratulations You Win");
+        buttonStart.style['visibility'] = 'visible';
+        // Comment line below if you want keep playing after win (Debug Purposes Only)
+        // gameover = true;
+        return true;
+    }
+    return false;
+}
 // Move between rows checking the same column
-function checkColumn(row, col, player) {
+function checkVerically(row, col, player) {
     // Wait to have minimun quantity of moves before start checking
     if (counter_turns < 6)
         return;
@@ -95,9 +105,75 @@ function checkColumn(row, col, player) {
     }
     return false;
 }
+// Move between columns checking the same row
+function checkHorizontally(row, col, player) {
+    // Wait to have minimun quantity of moves before start checking
+    if (counter_turns < 6)
+        return;
+    var counter = 1;
+    // Edge case if is the last column 
+    if (col == matrix[0].length - 1) {
+        for (var i = matrix[0].length - 1; i >= 0; i--) {
+            if (matrix[row][i - 1] == player) {
+                counter++;
+            }
+            else {
+                return false;
+            }
+            if (counter > 3) {
+                return true;
+            }
+        }
+    }
+    // Edge case if is the first column
+    else if (col == 0) {
+        for (var i = 0; i <= matrix[0].length - 1; i++) {
+            if (matrix[row][i + 1] == player) {
+                counter++;
+            }
+            else {
+                return false;
+            }
+            if (counter > 3) {
+                return true;
+            }
+        }
+    }
+    else { // middle
+        //check to the right columns
+        var i = col;
+        while (i <= matrix[0].length - 1) {
+            i++;
+            if (matrix[row][i] == player) {
+                counter++;
+            }
+            else {
+                break;
+            }
+            if (counter > 3) {
+                return true;
+            }
+        }
+        // Check to the left columns
+        var j = col;
+        while (j >= 0) {
+            j--;
+            if (matrix[row][j] == player) {
+                counter++;
+            }
+            else {
+                break;
+            }
+            if (counter > 3) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
 // Update logs of plays
-function updateLog(player) {
-    if (player) {
+function updateLog(turn) {
+    if (turn) {
         document.querySelector(".blueMoves").innerHTML = playerBlueMoves.toString();
     }
     else {
