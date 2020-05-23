@@ -14,10 +14,16 @@ const circle = cellWidth / 2;
 const matrix: number[][] = [];
 
 // Player turns
-let counterTurns = 0;
+let counter_turns = 0;
 
-// Draw Matrix
-function drawMatrix(rows: number, cols: number): void {
+// Logs
+let playerRedMoves: string[] = [];
+let playerBlueMoves: string[] = [];
+const logRed = document.getElementById("redMoves");
+const logBlue = document.getElementById("blueMoves");
+
+// Set Matrix
+function setMatrix(rows: number, cols: number): void {
     for (let x = 0; x < rows; x++) {
         matrix[x] = [];
         for (let y = 0; y < cols; y++) {
@@ -29,9 +35,15 @@ function drawMatrix(rows: number, cols: number): void {
 
 // Draw Circle in Position
 function drawCircle(x: number, y: number, player: number): void {
-    ctx.fillStyle = (player) ? "blue" : "red";
+    // White Border
     ctx.beginPath();
+    ctx.fillStyle = 'white';
     ctx.arc(circle + (y * cellWidth), circle + (x * cellWidth), circle, 0, 2 * Math.PI);
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.fillStyle = (player) ? "blue" : "red";
+    ctx.arc(circle + (y * cellWidth), circle + (x * cellWidth), circle - 10, 0, 2 * Math.PI);
     ctx.fill();
 }
 
@@ -43,18 +55,31 @@ function dropBall(column: number): void {
     // Start checking column from bottom to top
     for (let x = matrix.length - 1; x >= 0; x--) {
         if (matrix[x][col] === 0) {
-            turn = counterTurns % 2;
+            turn = counter_turns % 2;
             if (turn == 0) {
                 matrix[x][col] = 1;
+                playerRedMoves.push(`[${x + 1},${col + 1}]`);
                 drawCircle(x, col, turn);
             }
             else {
                 matrix[x][col] = 2;
+                playerBlueMoves.push(`[${x + 1},${col + 1}]`);
                 drawCircle(x, col, turn);
             }
-            counterTurns++;
+            updateLog(turn);
+            counter_turns++;
             break;
         }
+    }
+}
+
+// Update logs of plays
+function updateLog(player: number): void {
+    if (player) {
+        document.querySelector(".blueMoves").innerHTML = playerBlueMoves.toString();
+    }
+    else {
+        document.querySelector(".redMoves").innerHTML = playerRedMoves.toString();
     }
 }
 
@@ -74,5 +99,4 @@ canvas.addEventListener('click', (event: any) => {
 });
 
 //
-
-drawMatrix(num_of_rows, num_of_cols);
+setMatrix(num_of_rows, num_of_cols);

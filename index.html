@@ -17,12 +17,51 @@
             background: url(grid.jpg);
             margin: 0px auto;
         }
+
+        .log {
+            width: 750px;
+            margin: 0 auto;
+            text-align: left;
+        }
+
+        .redMoves {
+            color: red;
+            font-size: 1.5em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .blueMoves {
+            color: blue;
+            font-size: 1em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .redMoves::before {
+            content: "RED Player:";
+            color: red;
+            font-size: 1.5em;
+            font-weight: 600;
+        }
+
+        .blueMoves::before {
+            content: "BLUE Player:";
+            width: 100px;
+            color: blue;
+            font-size: 1.5em;
+            font-weight: 600;
+        }
     </style>
 </head>
 
 <body>
     <h1>Connect4 Game</h1>
     <canvas id="connectfour" width="700" height="600"></canvas>
+    <div class="log">
+        <div id="redMoves" class="redMoves"></div>
+        <div id="blueMoves" class="blueMoves"></div>
+    </div>
     <script src="connectfour.js"></script>
 </body>
 
