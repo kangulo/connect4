@@ -20,15 +20,22 @@ function drawMatrix(rows, cols) {
 function drawCircle(x, y) {
     ctx.fillStyle = "red";
     ctx.beginPath();
-    //ctx.arc(50 + (y * 100), 50 + (x * 100), 50, 0, 2 * Math.PI);
-    ctx.arc(x, y, 50, 0, 2 * Math.PI);
+    ctx.arc(50 + (y * 100), 50 + (x * 100), 50, 0, 2 * Math.PI);
+    //ctx.arc(x, y, 50, 0, 2 * Math.PI);
     ctx.fill();
-    console.log("entro x", x);
-    console.log("entro y", y);
 }
 //Drop ball until the end of the column
-function dropBall(col) {
-    drawCircle(col, num_of_rows * 100 - 50);
+function dropBall(column) {
+    var col = Math.floor(column / 100);
+    // Start checking column from bottom to top
+    for (var x = matrix.length - 1; x >= 0; x--) {
+        console.log("matrix[x][col] " + x + " " + col + " ");
+        if (matrix[x][col] === 0) {
+            matrix[x][col] = 1;
+            drawCircle(x, col);
+            break;
+        }
+    }
 }
 // Get Mouse Coordinates
 function getMousePosition(canvas, event) {
