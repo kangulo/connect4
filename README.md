@@ -12,3 +12,6 @@ I choose to use typescript and canvas for this project.
 <p align="center">
   <img src="./screen_shot.jpg" alt="screen_shot" width="600">
 </p>
+
+
+[DEMO](https://kangulo.github.io/connect4/)
