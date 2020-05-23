@@ -8,3 +8,7 @@ This is a digital version of the popular game [connect four](https://en.wikipedi
 ![enter image description here](https://upload.wikimedia.org/wikipedia/commons/a/ad/Connect_Four.gif)
 
 I choose to use typescript and canvas for this project.
+
+<p align="center">
+  <img src="./screen_shot.jpg" alt="screen_shot" width="600">
+</p>
