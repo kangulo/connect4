@@ -15,13 +15,33 @@ function drawMatrix(rows: number, cols: number): void {
         matrix[x] = [];
         for (let y = 0; y < cols; y++) {
             matrix[x][y] = 0;
-            ctx.fillStyle = "red";
-            ctx.beginPath();
-            ctx.arc(50 + (y * 100), 50 + (x * 100), 50, 0, 2 * Math.PI);
-            ctx.fill();
         }
     }
-    console.table(matrix);
+    //console.table(matrix);
 }
+
+// Draw Circle in Position
+function drawCircle(x: number, y: number): void {
+    ctx.fillStyle = "red";
+    ctx.beginPath();
+    //ctx.arc(50 + (y * 100), 50 + (x * 100), 50, 0, 2 * Math.PI);
+    ctx.arc(x, y, 50, 0, 2 * Math.PI);
+    ctx.fill();
+    console.log("entro x", x);
+    console.log("entro y", y);
+
+}
+
+// Get Mouse Coordinates
+function getMousePosition(event: any) {
+    drawCircle(event.clientX, event.clientY);
+}
+
+// Add click event
+canvas.addEventListener('click', (event: any) => {
+    getMousePosition(event);
+});
+
+//
 
 drawMatrix(num_of_rows, num_of_cols);
